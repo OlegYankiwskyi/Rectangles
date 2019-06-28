@@ -14,5 +14,4 @@ struct AppConfig {
     static let cornerTouchSize = CGSize(width: 40, height: 40)
     static let edgeTouchThickness: (vertical: CGFloat, horizontal: CGFloat) = (vertical: 40, horizontal: 40)
     static let minSize: CGFloat = 100
-    static let circleSize: CGFloat = 20
 }

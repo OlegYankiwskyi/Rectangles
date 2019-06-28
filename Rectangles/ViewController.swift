@@ -17,6 +17,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         super.viewDidLoad()
         
         self.setupGestureRecognizer()
+        self.view.backgroundColor = .cyan
     }
 
     private func setupGestureRecognizer() {
@@ -35,7 +36,10 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         
         if let point = self.point {
             let rectangle = self.createRectangle(point.center, location)
-            if !rectangle.isProperSize { rectangle.removeFromSuperview() }
+            if !rectangle.isProperSize {
+                rectangle.removeFromSuperview()
+                self.showIndicator()
+            }
         }
         else {
             self.createCircle(position: location)
@@ -64,8 +68,16 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
+    private func showIndicator() {
+        self.view.backgroundColor = .red
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            self.view.backgroundColor = .cyan
+        }
+    }
+    
     private func createCircle(position: CGPoint) {
         
+        self.hideSpotsOnRectangles()
         let circleView = CircleView(position: position)
         self.point = circleView
         self.view.addSubview(circleView)
@@ -73,6 +85,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     
     private func createRectangle(_ firstPoint: CGPoint, _ secondPoint: CGPoint) -> RectangleView {
         
+        self.hideSpotsOnRectangles()
         let rectangle = RectangleView(firstPoint: firstPoint, secondPoint: secondPoint)
         rectangle.delegate = self
         self.point?.removeFromSuperview()
@@ -80,12 +93,22 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         self.point = nil
         return rectangle
     }
+    
+    private func hideSpotsOnRectangles() {
+        
+        self.view.subviews.forEach {
+            ($0 as? RectangleView)?.hideSpots()
+        }
+    }
 }
 
 extension ViewController: RectangleDelegate {
     
     func moveToTop(_ view: UIView) {
         
+        self.point?.removeFromSuperview()
+        self.point = nil
+        self.hideSpotsOnRectangles()
         self.view.bringSubviewToFront(view)
     }
 }

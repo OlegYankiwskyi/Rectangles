@@ -9,11 +9,25 @@
 import Foundation
 import UIKit
 
+enum CircleSize {
+    case middle
+    case small
+    
+    var size: CGFloat {
+        switch self {
+        case .middle:
+            return 20
+        case .small:
+            return 10
+        }
+    }
+}
+
 class CircleView: UIView {
     
-    init(position: CGPoint) {
-        let circlePosition = CGPoint(x: position.x - AppConfig.circleSize/2, y: position.y - AppConfig.circleSize/2)
-        let circleFrame = CGRect(origin: circlePosition, size: CGSize(width: AppConfig.circleSize, height: AppConfig.circleSize))
+    init(position: CGPoint, size circleSize: CircleSize = .middle) {
+        let circlePosition = CGPoint(x: position.x - circleSize.size/2, y: position.y - circleSize.size/2)
+        let circleFrame = CGRect(origin: circlePosition, size: CGSize(width: circleSize.size, height: circleSize.size))
         super.init(frame: circleFrame)
         
         self.backgroundColor = .gray

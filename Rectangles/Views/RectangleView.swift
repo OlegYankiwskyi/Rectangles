@@ -29,7 +29,7 @@ class RectangleView: UIView {
         self.redraw(firstPoint: firstPoint, secondPoint: secondPoint)
         
         self.backgroundColor = .random()
-        self.layer.borderColor = UIColor.black.cgColor
+        self.layer.borderColor = UIColor.clear.cgColor
         self.layer.borderWidth = 3
         self.setupGestureRecognizer()
     }
@@ -37,7 +37,16 @@ class RectangleView: UIView {
     func redraw(firstPoint: CGPoint? = nil, secondPoint: CGPoint) {
         
         self.setFrame(firstPoint: firstPoint ?? self.initialPoint, secondPoint: secondPoint)
-        self.layer.borderColor = self.isProperSize ? UIColor.black.cgColor : UIColor.red.cgColor
+        self.layer.borderColor = self.isProperSize ? UIColor.clear.cgColor : UIColor.red.cgColor
+
+        self.showSpots()
+    }
+    
+    func hideSpots() {
+        
+        self.subviews.forEach {
+            ($0 as? CircleView)?.removeFromSuperview()
+        }
     }
     
     private func setupGestureRecognizer() {
@@ -55,6 +64,23 @@ class RectangleView: UIView {
         
         tapRecognizer.require(toFail: doubleTapRecognizer)
         self.isUserInteractionEnabled = true
+    }
+    
+    private func showSpots() {
+        self.hideSpots()
+        
+        let spots = [CircleView(position: CGPoint(x: 0, y: 0), size: .small),
+                     CircleView(position: CGPoint(x: self.bounds.maxX, y: 0), size: .small),
+                     CircleView(position: CGPoint(x: 0, y: self.bounds.maxY), size: .small),
+                     CircleView(position: CGPoint(x: self.bounds.maxX, y: self.bounds.maxY), size: .small),
+                     CircleView(position: CGPoint(x: self.bounds.midX, y: self.bounds.minY), size: .small),
+                     CircleView(position: CGPoint(x: self.bounds.midX, y: self.bounds.maxY), size: .small),
+                     CircleView(position: CGPoint(x: self.bounds.maxX, y: self.bounds.midY), size: .small),
+                     CircleView(position: CGPoint(x: self.bounds.minX, y: self.bounds.midY), size: .small)
+                     ]
+        spots.forEach {
+            self.addSubview($0)
+        }
     }
     
     @objc private func doubleTap() {
@@ -157,17 +183,14 @@ class RectangleView: UIView {
         if width > AppConfig.minSize && height > AppConfig.minSize {
             
             self.frame = CGRect(x: x, y: y, width: width, height: height)
+            self.showSpots()
         }
-    }
-    
-    private func rotate(angle: CGFloat) {
-        
-        self.transform = CGAffineTransform(rotationAngle: angle)
     }
     
     private func setAsTopView() {
         
         self.delegate?.moveToTop(self)
+        self.showSpots()
     }
     
     private func moveTo(x: CGFloat, y: CGFloat) {
@@ -175,6 +198,7 @@ class RectangleView: UIView {
         let x = self.frame.minX - x
         let y = self.frame.minY - y
         self.frame = CGRect(x: x, y: y, width: self.frame.width, height: self.frame.height)
+        self.showSpots()
     }
     
     @objc private func tap(_ sender: UITapGestureRecognizer) {
@@ -190,6 +214,7 @@ class RectangleView: UIView {
         let height = abs(firstPoint.y - secondPoint.y)
         
         self.frame = CGRect(x: x, y: y, width: width, height: height)
+        self.showSpots()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -231,7 +256,7 @@ extension RectangleView {
             size: AppConfig.cornerTouchSize)
     }
 
-    private var cropAreaTopEdgeFrame: CGRect{
+    private var cropAreaTopEdgeFrame: CGRect {
         return CGRect(
             x       : self.cropAreaTopLeftCornerFrame.maxX,
             y       : self.frame.origin.y - AppConfig.edgeTouchThickness.horizontal / 2,
