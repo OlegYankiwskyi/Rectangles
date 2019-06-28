@@ -13,9 +13,8 @@ class RectangleView: UIView {
     
     var delegate: RectangleDelegate?
     
-    private var startDragPosition: CGPoint?
+    private var dragPosition: CGPoint?
     private var currentCropAreaPart: CropAreaPart?
-    private var beginGesturePart: CropAreaPart?
     private let initialPoint: CGPoint
     
     var isProperSize: Bool {
@@ -54,6 +53,7 @@ class RectangleView: UIView {
         doubleTapRecognizer.numberOfTapsRequired = 2
         self.addGestureRecognizer(doubleTapRecognizer)
         
+        tapRecognizer.require(toFail: doubleTapRecognizer)
         self.isUserInteractionEnabled = true
     }
     
@@ -81,8 +81,7 @@ class RectangleView: UIView {
     
     private func handleBeginingDrag(position: CGPoint) {
         
-        self.startDragPosition = position
-        self.beginGesturePart = self.getCropAreaPartContainsPoint(position)
+        self.dragPosition = position
         self.currentCropAreaPart = self.getCropAreaPartContainsPoint(position)
         self.backgroundColor = .random()
     }
@@ -146,11 +145,11 @@ class RectangleView: UIView {
             y = self.frame.minY
             
         default: //Drag
-            guard let startDragPosition = self.startDragPosition else { return }
+            guard let dragPosition = self.dragPosition else { return }
             
-            x = startDragPosition.x - position.x
-            y = startDragPosition.y - position.y
-            self.startDragPosition = position
+            x = dragPosition.x - position.x
+            y = dragPosition.y - position.y
+            self.dragPosition = position
             self.moveTo(x: x, y: y)
             return
         }

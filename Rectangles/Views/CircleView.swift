@@ -11,16 +11,13 @@ import UIKit
 
 class CircleView: UIView {
     
-    private let radius: CGFloat = 10
-    
     init(position: CGPoint) {
-        let circlePosition = CGPoint(x: position.x - self.radius, y: position.y - self.radius)
-        let circleFrame = CGRect(origin: circlePosition, size: CGSize(width: self.radius*2, height: self.radius*2))
+        let circlePosition = CGPoint(x: position.x - AppConfig.circleSize/2, y: position.y - AppConfig.circleSize/2)
+        let circleFrame = CGRect(origin: circlePosition, size: CGSize(width: AppConfig.circleSize, height: AppConfig.circleSize))
         super.init(frame: circleFrame)
         
         self.backgroundColor = .gray
         self.layer.cornerRadius = self.frame.size.width/2
-//        self.isUserInteractionEnabled = true
     }
     
     required init?(coder aDecoder: NSCoder) {
