@@ -58,11 +58,14 @@ class RectangleView: UIView {
         longPressRecognizer.minimumPressDuration = 0.1
         self.addGestureRecognizer(longPressRecognizer)
         
+        let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGesture))
+        self.addGestureRecognizer(panRecognizer)
+        
         let doubleTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(doubleTap))
         doubleTapRecognizer.numberOfTapsRequired = 2
         self.addGestureRecognizer(doubleTapRecognizer)
         
-        tapRecognizer.require(toFail: doubleTapRecognizer)
+        tapRecognizer.require(toFail: longPressRecognizer)
         self.isUserInteractionEnabled = true
     }
     
@@ -89,6 +92,13 @@ class RectangleView: UIView {
     }
     
     @objc private func longPress(_ sender: UILongPressGestureRecognizer) {
+        
+        if sender.state == .began {
+            self.backgroundColor = .random()
+        }
+    }
+    
+    @objc private func panGesture(_ sender: UIPanGestureRecognizer) {
         let position = sender.location(in: nil)
         self.setAsTopView()
         
@@ -109,7 +119,6 @@ class RectangleView: UIView {
         
         self.dragPosition = position
         self.currentCropAreaPart = self.getCropAreaPartContainsPoint(position)
-        self.backgroundColor = .random()
     }
     
     private func handleEdit(position: CGPoint) {

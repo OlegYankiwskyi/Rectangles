@@ -24,11 +24,10 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tap))
         
-        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPress))
-        longPressRecognizer.minimumPressDuration = 0.1
+        let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGesture))
         
         self.view.addGestureRecognizer(tapRecognizer)
-        self.view.addGestureRecognizer(longPressRecognizer)
+        self.view.addGestureRecognizer(panRecognizer)
     }
     
     @objc private func tap(_ sender: UITapGestureRecognizer) {
@@ -46,7 +45,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
-    @objc private func longPress(_ sender: UILongPressGestureRecognizer) {
+    @objc private func panGesture(_ sender: UIPanGestureRecognizer) {
         let position = sender.location(in: nil)
 
         switch sender.state {

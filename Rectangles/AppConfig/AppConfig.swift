@@ -11,7 +11,7 @@ import CoreGraphics
 
 struct AppConfig {
     
-    static let cornerTouchSize = CGSize(width: 40, height: 40)
-    static let edgeTouchThickness: (vertical: CGFloat, horizontal: CGFloat) = (vertical: 40, horizontal: 40)
+    static let cornerTouchSize = CGSize(width: 60, height: 60)
+    static let edgeTouchThickness: (vertical: CGFloat, horizontal: CGFloat) = (vertical: 60, horizontal: 60)
     static let minSize: CGFloat = 100
 }
